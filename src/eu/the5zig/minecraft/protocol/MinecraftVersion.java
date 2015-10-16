@@ -123,6 +123,18 @@ public class MinecraftVersion {
 						String originalLine = originalLines.get(i);
 						for (int j = 0; j < compareLines.size(); j++) {
 							String compareLine = compareLines.get(j);
+							for (Packet o_packet : original.getPackets()) {
+								String o_packet_name = o_packet.getClassName().substring(0, o_packet.getClassName().lastIndexOf(".class"));
+								if (originalLine.contains(o_packet_name) && (originalLine.charAt(originalLine.indexOf(o_packet_name) + o_packet_name.length()) == ' ' ||
+										(originalLine.indexOf(o_packet_name) > 0 && originalLine.charAt(originalLine.indexOf(o_packet_name) - 1) == ' ' && originalLine.charAt(
+												originalLine.indexOf(o_packet_name) + o_packet_name.length()) == '('))) {
+									for (Packet c_packet : getPackets()) {
+										if (c_packet.equals(o_packet)) {
+											compareLine = compareLine.replace(c_packet.getClassName().substring(0, c_packet.getClassName().lastIndexOf(".class")), o_packet_name);
+										}
+									}
+								}
+							}
 							if (i == j && !originalLine.equals(compareLine)) {
 								Logger.info("Line " + (i + 1) + " in " + original.getVersion() + "#" + originalPacketName + " is different to " + getVersion() + "#" + comparePacketName +
 										" (Packet id " + originalPacketId + ")");
