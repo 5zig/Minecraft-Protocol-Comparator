@@ -1,5 +1,7 @@
 package eu.the5zig.minecraft.protocol;
 
+import org.apache.commons.lang3.StringUtils;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
@@ -136,8 +138,12 @@ public class MinecraftVersion {
 								}
 							}
 							if (i == j && !originalLine.equals(compareLine)) {
-								Logger.info("Line " + (i + 1) + " in " + original.getVersion() + "#" + originalPacketName + " is different to " + getVersion() + "#" + comparePacketName +
-										" (Packet id " + originalPacketId + ")");
+								int levenshteinDistance = StringUtils.getLevenshteinDistance(originalLine, compareLine);
+								// ignore changed minecraft names
+								if (levenshteinDistance > 3) {
+									Logger.info("Line " + (i + 1) + " in " + original.getVersion() + "#" + originalPacketName + " is different to " + getVersion() + "#" + comparePacketName +
+											" (Packet id " + originalPacketId + ")");
+								}
 							}
 						}
 					}
